@@ -13,6 +13,7 @@ that it takes to complete Daf Yomi.
 
 from urllib2 import urlopen
 import json
+import os
 from TwitterFollowBot import TwitterBot
 # import tweepy
 
@@ -53,22 +54,28 @@ def get_chapter(book, chapter_num):
     return words
 
 
+def get_cache_path():
+    """Returns the absolute path of the cache"""
+    CACHE_NAME = 'TorahYomiCache.txt'
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), CACHE_NAME)
+
+
 def save_words_to_cache(words):
     """Saves list of words to ``CACHE_NAME``"""
-    CACHE_NAME = 'TorahYomiCache.txt'
-    with open(CACHE_NAME, 'w') as file_pointer:
+    CACHE_PATH = get_cache_path()
+    with open(CACHE_PATH, 'w') as file_pointer:
         json.dump(words, file_pointer)
 
 
 def read_cache():
     """Returns contents of cache or empty list if cache doesn't exist"""
-    CACHE_NAME = 'TorahYomiCache.txt'
+    CACHE_PATH = get_cache_path()
 
     try:
-        with open(CACHE_NAME, 'r') as file_pointer:
+        with open(CACHE_PATH, 'r') as file_pointer:
             return json.load(file_pointer)
     except (IOError, ValueError):
-        with open(CACHE_NAME, 'w') as file_pointer:
+        with open(CACHE_PATH, 'w') as file_pointer:
             return []
 
 def tweet(msg):
