@@ -54,22 +54,21 @@ def get_chapter(book, chapter_num):
     return words
 
 
-def get_cache_path():
-    """Returns the absolute path of the cache"""
-    CACHE_NAME = 'TorahYomiCache.txt'
-    return os.path.join(os.path.dirname(os.path.abspath(__file__)), CACHE_NAME)
+def script_dir():
+    """Returns the absolute path of the script"""
+    return os.path.dirname(os.path.abspath(__file__))
 
 
 def save_words_to_cache(words):
     """Saves list of words to ``CACHE_NAME``"""
-    CACHE_PATH = get_cache_path()
+    CACHE_PATH = os.path.join(script_dir(), 'TorahYomiCache.txt')
     with open(CACHE_PATH, 'w') as file_pointer:
         json.dump(words, file_pointer)
 
 
 def read_cache():
     """Returns contents of cache or empty list if cache doesn't exist"""
-    CACHE_PATH = get_cache_path()
+    CACHE_PATH = os.path.join(script_dir(), 'TorahYomiCache.txt')
 
     try:
         with open(CACHE_PATH, 'r') as file_pointer:
@@ -79,7 +78,8 @@ def read_cache():
             return []
 
 def tweet(msg):
-    my_bot = TwitterBot()
+    my_bot = TwitterBot(
+        config_file=os.path.join(script_dir(), 'config.txt'))
     my_bot.send_tweet(msg)
 
 '''
